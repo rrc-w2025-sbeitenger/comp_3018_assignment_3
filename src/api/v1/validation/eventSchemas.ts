@@ -7,7 +7,7 @@ export const eventSchemas = {
         body: Joi.object({
             name: Joi.string().min(3).trim().required().messages({
                 "any.required": `Validation error: "name" is required.`,
-                "string.trim": `Validation error: "name" must be at least 3 characters long.`,
+                "string.min": `Validation error: "name" must be at least 3 characters long.`,
                 "string.empty": `Validation error: "name" cannot be empty.`,
             }),
 
@@ -18,12 +18,16 @@ export const eventSchemas = {
             }),
 
             status: Joi.string().valid("active", "cancelled", "completed").optional().messages({
-                "any.optional": `Validation error: "status" must be one of [active, cancelled, completed]`,
+                "any.only": `Validation error: "status" must be one of [active, cancelled, completed]`,
             }),
 
             category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").optional().messages({
-                "any.optional": `Validation error: "category" must be one of [conference, workshop, meetup, seminar, general]`,
-            }), 
+                "any.only": `Validation error: "category" must be one of [conference, workshop, meetup, seminar, general]`,
+            }),
+            
+            registrationCount: Joi.number().integer().max(Joi.ref("capacity")).optional().messages({
+                "any.max": `Validation error: "registrationCount" must be less than or equal to ref:capacity.`,
+            }),
         }),
     },
 };
