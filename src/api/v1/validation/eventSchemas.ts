@@ -20,6 +20,10 @@ export const eventSchemas = {
             status: Joi.string().valid("active", "cancelled", "completed").optional().messages({
                 "any.optional": `Validation error: "status" must be one of [active, cancelled, completed]`,
             }),
+
+            category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").optional().messages({
+                "any.optional": `Validation error: "category" must be one of [conference, workshop, meetup, seminar, general]`,
+            }), 
         }),
     },
 };
