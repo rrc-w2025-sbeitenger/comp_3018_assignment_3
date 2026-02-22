@@ -11,6 +11,11 @@ export const eventSchemas = {
                 "string.empty": `Validation error: "name" cannot be empty.`,
             }),
             
+            capacity: Joi.number().integer().min(5).required().messages({
+                "any.required": `Validation error: "capacity" must be greater than or equal to 5.`,
+                "number.min": `Validation error: "capacity" must be greater than or equal to 5.`,
+                "number.interger": `Validation error: "capacity" must be an interger`,
+            }),
         }),
     },
 };
