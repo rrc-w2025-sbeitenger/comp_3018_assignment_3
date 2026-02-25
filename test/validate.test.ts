@@ -46,4 +46,23 @@ describe("validateRequest Middleware", () => {
     //expect(mockRes.status).not.toHaveBeenCalled();
     //expect(mockRes.json).not.toHaveBeenCalled();
     });
+
+     it("should pass for only required valid inputs", () => {
+    //Arrange
+    const testSchemas = {
+        body: Joi.object({
+            name: Joi.string().min(3).trim().required(),
+            capacity: Joi.number().integer().min(5).required(),
+            date: Joi.date().greater('now').iso().required(),
+        }),
+    };
+    mockReq.body = { name: "counter-strike", capacity: 150, date: "2026-12-25T09:00:00.000Z"};
+    const middleware = validateRequest(testSchemas);
+
+    //Act
+    middleware(mockReq as Request, mockRes as Response, mockNext);
+
+    //Assert
+    expect(mockNext).toHaveBeenCalled();
+    });
 });
