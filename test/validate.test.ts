@@ -162,4 +162,28 @@ describe("validateRequest Middleware", () => {
     expect(mockNext).not.toHaveBeenCalled();
     });
 
+    it("should fail for category not being in the valid list", () => {
+    //Arrange
+    const testSchemas = {
+        body: Joi.object({
+            name: Joi.string().min(3).trim().required(),
+            capacity: Joi.number().integer().min(5).required(),
+            category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").optional(),
+            date: Joi.date().greater('now').iso().required(),
+        }),
+    };
+
+    mockReq.body = { name: "counter-strike", capacity: "joeeeeyy", category: "no-meetup", date: "2026-12-25T09:00:00.000Z"};
+    const middleware = validateRequest(testSchemas);
+
+    //Act
+    middleware(mockReq as Request, mockRes as Response, mockNext);
+
+    //Assert
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({
+        error: expect.stringContaining("Validation error"),
+    });
+    expect(mockNext).not.toHaveBeenCalled();
+    });
 });
