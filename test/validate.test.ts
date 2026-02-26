@@ -113,5 +113,29 @@ describe("validateRequest Middleware", () => {
     });
     expect(mockNext).not.toHaveBeenCalled();
     });
-    
+
+    it("should fail for capacity being under the min of 5", () => {
+    //Arrange
+    const testSchemas = {
+        body: Joi.object({
+            name: Joi.string().min(3).trim().required(),
+            capacity: Joi.number().integer().min(5).required(),
+            date: Joi.date().greater('now').iso().required(),
+        }),
+    };
+
+    mockReq.body = { name: "counter-strike", capacity: 3, date: "2026-12-25T09:00:00.000Z"};
+    const middleware = validateRequest(testSchemas);
+
+    //Act
+    middleware(mockReq as Request, mockRes as Response, mockNext);
+
+    //Assert
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({
+        error: expect.stringContaining("Validation error"),
+    });
+    expect(mockNext).not.toHaveBeenCalled();
+    });
+
 });
