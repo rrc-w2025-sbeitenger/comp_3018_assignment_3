@@ -22,5 +22,5 @@ export const createEvent = (req: Request, res:Response): void => {
     const category: string = req.body.category;
 
     const newEvent = createEventService(name, date, capacity, registrationCount, status, category);
-    res.status(HTTP_STATUS.OK).send(newEvent);
+    res.status(HTTP_STATUS.OK).json(successResponse("Event Created", newEvent));
 }
