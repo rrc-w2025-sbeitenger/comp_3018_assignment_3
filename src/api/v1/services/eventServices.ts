@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from "../../../constants/httpConstant";
-import { eventData } from "../models/eventModel";
+import { event, eventData } from "../models/eventModel";
 
 export interface HealthCheckResponse {
     status: number;
@@ -33,7 +33,7 @@ export const createEventService = (
     //current date.
     const createdAt: Date =  (new Date());
     
-    const newEvent: any = {
+    const newEvent: event = {
         id: id,
         name: name,
         date: date,

@@ -1,4 +1,5 @@
-import Joi, { ObjectSchema } from "joi";
+import Joi from "joi";
+//{ ObjectSchema } 
 
 // Post operation schemas organized by request part
 export const eventSchemas = {
@@ -26,7 +27,8 @@ export const eventSchemas = {
             }),
             
             registrationCount: Joi.number().integer().max(Joi.ref("capacity")).optional().messages({
-                "any.max": `Validation error: "registrationCount" must be less than or equal to ref:capacity.`
+                "number.max": `Validation error: "registrationCount" must be less than or equal to ref:capacity.`,
+                "number.interger": `Validation error: "registrationCount" must be an interger.`,
             }),
 
             date: Joi.date().greater('now').iso().required().messages({

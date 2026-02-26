@@ -4,7 +4,7 @@ import {
     HealthCheckResponse,
      getHealthStatusService,
       createEventService,
-    } from "../services/itemServices";
+    } from "../services/eventServices";
 import { successResponse } from "../models/responseModel";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
