@@ -1,5 +1,10 @@
 import { HTTP_STATUS } from "../../../constants/httpConstant";
-import { event, eventData } from "../models/eventModel";
+import { eventCreateRequest } from "../models/eventCreateRequestModel";
+//import { event } from "../models/eventModel";
+//import { eventResponse } from "../models/eventResponse";
+import { addDocument } from "../repositories/eventRepository";
+import { db } from "../../../../config/firebaseConfig";
+import { event } from "../models/eventModel";
 
 export interface HealthCheckResponse {
     status: number;
@@ -21,19 +26,29 @@ export const getHealthStatusService = (): HealthCheckResponse => {
     };
 }
 
-export const createEventService = (
-    name: string,
-    date: string,
-    capacity: number, 
-    registrationCount: number, 
-    status: string, 
-    category:string
-): any => {
+export const createEventService = async (event: eventCreateRequest): Promise<event> => {
+    //.get() returns a snapshot of the whole firestore collection. It's just a view of the collection.
+    const eventSnapshot = await db.collection("events").get();
+    //docs gets an array of the collection.
+    const documentCount = eventSnapshot.docs.length + 1;
+    const id: string = "evt_" + String(documentCount).padStart(5, "0");
+
+    event = {
+        name: event.name,
+        date: event.date,
+        capacity: event.capacity,
+        registrationCount: event.registrationCount,
+        status: event.status,
+        category: event.category,
+    }
+    return await addDocument(event, id);
+
+    /*
     const id: string = "evt_" + String(eventData.length + 1).padStart(5, "0");
     //current date.
     const createdAt: Date =  (new Date());
     
-    const newEvent: event = {
+    const newEvent: eventResponse = {
         id: id,
         name: name,
         date: date,
@@ -46,4 +61,5 @@ export const createEventService = (
     }
 
     return newEvent;
+    */
 }
