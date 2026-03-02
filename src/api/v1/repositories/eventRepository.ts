@@ -5,7 +5,7 @@ import { Event } from "../models/eventModel";
 import { EventDTO } from "../models/eventDTO";
 //import { EventResponse } from "../models/eventResponse";
 
-export const addDocument = async (event: eventCreateRequest, id: string): Promise<Event> => {
+export const addDocument = async (event: eventCreateRequest, id: string): Promise<EventDTO> => {
     // Create a reference to a document in the 'users' collection with ID
     // If the document doesn't exist, it will be created
     const docRef: DocumentReference = db.collection("events").doc();
@@ -60,8 +60,9 @@ export const getCollection = async (): Promise<EventDTO[]> => {
     return events;
 };
 
-export const getDocumentById = async (id: string): Promise<Event | undefined> => {
-    // Create a reference to a specific document in the 'users' collection
+//! changed Event to EventDTO
+export const getDocumentById = async (id: string): Promise<EventDTO | undefined> => {
+    // Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
     // Use the `get()` method to retrieve the document
@@ -84,6 +85,30 @@ export const getDocumentById = async (id: string): Promise<Event | undefined> =>
         }
     } else {
         //return undefined for validation in service module - getEventByIdService.
+        return undefined;
+    }
+};
+
+export const updateDocument = async (id:string, event:eventCreateRequest): Promise<void | undefined> => {
+    // Create a reference to a specific document in the 'events' collection
+    const docRef: DocumentReference = db.collection("events").doc(id);
+
+    // Use the `get()` method to retrieve the document
+    const doc = await docRef.get();
+    
+    // Use the `update()` method to modify specific fields in the document
+    // This will only change the specified fields, leaving others untouched
+    if(doc.exists){
+        await docRef.update({
+        name: event.name,
+        date: event.date,
+        capacity: event.capacity,
+        registrationCount: event.registrationCount,
+        status: event.status,
+        category: event.category,
+        updatedAt: new Date()
+    });
+    } else {
         return undefined;
     }
 };
