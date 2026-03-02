@@ -1,5 +1,5 @@
 //interface that repersents my entity that will be stored on the database.
-export interface event {
+export interface Event {
     id: string,
     name: string,
     date: string,
@@ -7,9 +7,6 @@ export interface event {
     registrationCount: number,
     status: string,
     category: string,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt: string,
+    updatedAt: string,
 }
-
-//temp storage for eventData.
-export const eventData: event[] = []

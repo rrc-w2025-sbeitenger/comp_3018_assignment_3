@@ -1,9 +1,12 @@
-//use for create/post.
-export interface eventCreateRequest{
+//interface for returning all documents.
+export interface EventDTO {
+    id: string,
     name: string,
     date: string,
     capacity: number,
     registrationCount: number,
     status: string,
     category: string,
+    createdAt: string,
+    updatedAt: string,
 }
