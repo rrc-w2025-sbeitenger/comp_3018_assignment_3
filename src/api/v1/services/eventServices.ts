@@ -1,11 +1,12 @@
 import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 //import { eventResponse } from "../models/eventResponse";
-import { addDocument, getCollection } from "../repositories/eventRepository";
+import { addDocument, getCollection, getDocumentById } from "../repositories/eventRepository";
 import { db } from "../../../../config/firebaseConfig";
 import { Event } from "../models/eventModel";
 import { QuerySnapshot } from "firebase-admin/firestore";
 import { EventDTO } from "../models/eventDTO";
+import { EventResponse } from "../models/eventResponse";
 
 export interface HealthCheckResponse {
     status: number;
@@ -49,3 +50,24 @@ export const createEventService = async (event: eventCreateRequest): Promise<Eve
 export const getAllEventService = async (): Promise<EventDTO[]> => {
     return await getCollection();
 }
+
+export const getEventByIdService = async (id:string): Promise<EventResponse | undefined> => {
+    const entity = await getDocumentById(id);
+
+    //if getDocumentById in repository fails validaiton then return undefined.
+    if(!entity){
+        return undefined;
+    }
+
+    return {
+        id: id,
+        name: entity.name,
+        date: entity.date,
+        capacity: entity.capacity,
+        registrationCount: entity.registrationCount,
+        status: entity.status,
+        category: entity.category,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+    }
+};
