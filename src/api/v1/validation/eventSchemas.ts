@@ -36,4 +36,13 @@ export const eventSchemas = {
             })
         }),
     },
+
+    getById: {
+        params: Joi.object({
+            id: Joi.string().required().messages({
+                "any.required": `Validation error: "Id" is required.`
+            })
+        })
+    }
+        
 };
