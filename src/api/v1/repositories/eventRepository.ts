@@ -3,6 +3,7 @@ import { DocumentReference, QuerySnapshot } from "firebase-admin/firestore";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { Event } from "../models/eventModel";
 import { EventDTO } from "../models/eventDTO";
+//import { EventResponse } from "../models/eventResponse";
 
 export const addDocument = async (event: eventCreateRequest, id: string): Promise<Event> => {
     // Create a reference to a document in the 'users' collection with ID
@@ -57,4 +58,32 @@ export const getCollection = async (): Promise<EventDTO[]> => {
     });
 
     return events;
+};
+
+export const getDocumentById = async (id: string): Promise<Event | undefined> => {
+    // Create a reference to a specific document in the 'users' collection
+    const docRef: DocumentReference = db.collection("events").doc(id);
+
+    // Use the `get()` method to retrieve the document
+    const doc = await docRef.get();
+
+    // Check if the document exists
+    if (doc.exists) {
+        // `doc.data()` returns an object with all fields in the document
+        let data = doc.data();
+        return {
+            id: data!.id,
+            name: data!.name,
+            date: data!.date,
+            capacity: data!.capacity,
+            registrationCount: data!.registrationCount,
+            status: data!.status,
+            category: data!.category,
+            createdAt: data!.createdAt,
+            updatedAt: data!.updatedAt,
+        }
+    } else {
+        //return undefined for validation in service module - getEventByIdService.
+        return undefined;
+    }
 };
