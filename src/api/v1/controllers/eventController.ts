@@ -8,7 +8,8 @@ import {
      getHealthStatusService,
       createEventService,
        getAllEventService,
-        getEventByIdService
+        getEventByIdService,
+         updateEventByIdService
     } from "../services/eventServices";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
@@ -46,14 +47,39 @@ export const getAllEvents = async (req: Request, res:Response) => {
 
 export const getEventById = async (req: Request, res:Response) => {
     try{
-        const id = String(req.params.id);
+        const id: string = String(req.params.id);
         const getEventResult = await getEventByIdService(id);
 
         if(!getEventResult){
-            res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: "Id" is required.`});
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
         }
 
         res.status(HTTP_STATUS.OK).json(successResponse(getEventResult));
+    } catch (error){
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
+    }
+}
+
+export const updateEvent = async (req: Request, res:Response) => {
+    try{
+        const id: string = String(req.params.id);
+        const eventRequest: eventCreateRequest = {
+            name: req.body.name,
+            date: req.body.date,
+            capacity: req.body.capacity,
+            registrationCount: req.body.registrationCount,
+            status: req.body.status,
+            category: req.body.category,
+        }
+
+        const updatedEvent = await updateEventByIdService(id, eventRequest);
+
+        if(!updatedEvent){
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
+        }
+
+        res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was updated`));
+        
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
     }
