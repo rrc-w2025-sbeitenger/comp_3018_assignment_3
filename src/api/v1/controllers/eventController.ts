@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { successResponse } from "../models/responseModel";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
+import { EventDTO } from "../models/eventDTO";
 import { 
     HealthCheckResponse,
      getHealthStatusService,
       createEventService,
        getAllEventService,
+        getEventByIdService
     } from "../services/eventServices";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
@@ -27,7 +29,7 @@ export const createEvent = async (req: Request, res:Response) => {
         }
         
         const newEventResult = await createEventService(requestEvent);
-        res.status(HTTP_STATUS.OK).json(successResponse(newEventResult));
+        res.status(HTTP_STATUS.CREATED).json(successResponse(newEventResult));
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error"});
     }
@@ -35,8 +37,23 @@ export const createEvent = async (req: Request, res:Response) => {
 
 export const getAllEvents = async (req: Request, res:Response) => {
     try {
-        const getAllEventsResult = await getAllEventService();
+        const getAllEventsResult: EventDTO[] = await getAllEventService();
         res.status(HTTP_STATUS.OK).json(successResponse(getAllEventsResult));
+    } catch (error){
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
+    }
+}
+
+export const getEventById = async (req: Request, res:Response) => {
+    try{
+        const id = String(req.params.id);
+        const getEventResult = await getEventByIdService(id);
+
+        if(!getEventResult){
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: "Id" is required.`});
+        }
+
+        res.status(HTTP_STATUS.OK).json(successResponse(getEventResult));
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
     }
