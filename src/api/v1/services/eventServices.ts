@@ -1,12 +1,16 @@
 import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
-//import { eventResponse } from "../models/eventResponse";
-import { addDocument, getCollection, getDocumentById } from "../repositories/eventRepository";
 import { db } from "../../../../config/firebaseConfig";
-import { Event } from "../models/eventModel";
+//import { Event } from "../models/eventModel";
 import { QuerySnapshot } from "firebase-admin/firestore";
-import { EventDTO } from "../models/eventDTO";
 import { EventResponse } from "../models/eventResponse";
+import { EventDTO } from "../models/eventDTO";
+import {
+     addDocument,
+      getCollection,
+       getDocumentById,
+        updateDocument
+     } from "../repositories/eventRepository";
 
 export interface HealthCheckResponse {
     status: number;
@@ -28,13 +32,15 @@ export const getHealthStatusService = (): HealthCheckResponse => {
     };
 }
 
-export const createEventService = async (event: eventCreateRequest): Promise<Event> => {
-    //.get() returns a snapshot of the whole firestore collection. It's just a view of the collection.
+//! change promise from Event to EventDTO.
+export const createEventService = async (event: eventCreateRequest): Promise<EventDTO> => {
+    // `get()` returns a QuerySnapshot containing all documents in the collection.
     const eventSnapshot: QuerySnapshot = await db.collection("events").get();
     //docs gets an array of the collection.
     const documentCount = eventSnapshot.docs.length + 1;
     const id: string = "evt_" + String(documentCount).padStart(5, "0");
 
+    /*
     event = {
         name: event.name,
         date: event.date,
@@ -43,11 +49,13 @@ export const createEventService = async (event: eventCreateRequest): Promise<Eve
         status: event.status,
         category: event.category,
     }
+    */
     return await addDocument(event, id);
 }
 
-//change 'any' later to what it should be.
-export const getAllEventService = async (): Promise<EventDTO[]> => {
+//! check if it must be EventResponse or Event!!! 1:17
+
+export const getAllEventService = async (): Promise<EventResponse[]> => {
     return await getCollection();
 }
 
@@ -70,4 +78,9 @@ export const getEventByIdService = async (id:string): Promise<EventResponse | un
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,
     }
-};
+}
+
+export const updateEventByIdService = async(id:string, event: eventCreateRequest): Promise<void | undefined> => {
+    await updateDocument(id, event);
+    return;
+}
