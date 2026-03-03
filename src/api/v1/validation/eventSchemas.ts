@@ -2,7 +2,7 @@ import Joi from "joi";
 //{ ObjectSchema } 
 
 // Post operation schemas organized by request part
-export const eventSchemas = {
+export const eventSchemas: any = {
     //POST /event - Create new event
     create: {
         body: Joi.object({

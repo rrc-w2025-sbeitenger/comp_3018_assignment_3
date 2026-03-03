@@ -1,4 +1,5 @@
 import { Event } from "../src/api/v1/models/eventModel";
+import { eventCreateRequest } from "../src/api/v1/models/eventCreateRequestModel";
 import {
      getDocumentById,
        getCollection,
@@ -20,10 +21,10 @@ jest.mock("../src/api/v1/repositories/eventRepository", () => ({
     deleteDocument: jest.fn(),
 }));
 
-const mockGetDocumentById = jest.mocked(getDocumentById);
-const mockGetCollection = jest.mocked(getCollection);
-const mockUpdateDocument = jest.mocked(updateDocument);
-const mockDeleteDocument = jest.mocked(deleteDocument);
+const mockGetDocumentById: any = jest.mocked(getDocumentById);
+const mockGetCollection: any = jest.mocked(getCollection);
+const mockUpdateDocument: any = jest.mocked(updateDocument);
+const mockDeleteDocument: any = jest.mocked(deleteDocument);
 
 const mockEntity: Event = {
     id: "evt_00001",
@@ -37,7 +38,7 @@ const mockEntity: Event = {
     updatedAt: "2026-01-01T00:00:00.000Z",
 }
 
-const mockCreateRequest = {
+const mockCreateRequest: eventCreateRequest = {
     name: "Test Event",
     date: "2026-01-01T00:00:00.000Z",
     capacity: 100,

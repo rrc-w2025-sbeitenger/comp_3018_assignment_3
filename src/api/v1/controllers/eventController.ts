@@ -13,13 +13,14 @@ import {
           deleteEventService
     } from "../services/eventServices";
 import { DocumentData } from "node_modules/firebase-admin/lib/firestore";
+import { EventResponse } from "../models/eventResponse";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
     const healthStatus: HealthCheckResponse = getHealthStatusService();
     res.status(HTTP_STATUS.OK).json(successResponse(healthStatus));
 }
 
-export const createEvent = async (req: Request, res:Response) => {
+export const createEvent = async (req: Request, res:Response): Promise<void> => {
     try{
         const requestEvent: eventCreateRequest = {
             name: req.body.name,
@@ -31,14 +32,14 @@ export const createEvent = async (req: Request, res:Response) => {
             category: req.body.category
         }
         
-        const newEventResult = await createEventService(requestEvent);
+        const newEventResult: EventDTO = await createEventService(requestEvent);
         res.status(HTTP_STATUS.CREATED).json(successResponse(newEventResult));
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error"});
     }
 }
 
-export const getAllEvents = async (req: Request, res:Response) => {
+export const getAllEvents = async (req: Request, res:Response): Promise<void> => {
     try {
         const getAllEventsResult: EventDTO[] = await getAllEventService();
         res.status(HTTP_STATUS.OK).json(successResponse(getAllEventsResult));
@@ -47,10 +48,10 @@ export const getAllEvents = async (req: Request, res:Response) => {
     }
 }
 
-export const getEventById = async (req: Request, res:Response) => {
+export const getEventById = async (req: Request, res:Response): Promise<void> => {
     try{
         const id: string = String(req.params.id);
-        const getEventResult = await getEventByIdService(id);
+        const getEventResult: EventResponse | undefined = await getEventByIdService(id);
 
         if(!getEventResult){
             res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
@@ -62,7 +63,7 @@ export const getEventById = async (req: Request, res:Response) => {
     }
 }
 
-export const updateEvent = async (req: Request, res:Response) => {
+export const updateEvent = async (req: Request, res:Response): Promise<void> => {
     try{
         const id: string = String(req.params.id);
         const eventRequest: eventCreateRequest = {
@@ -87,7 +88,7 @@ export const updateEvent = async (req: Request, res:Response) => {
     }
 }
 
-export const deleteEvent = async (req: Request, res: Response) => {
+export const deleteEvent = async (req: Request, res: Response): Promise<void> => {
     try{
         const id: string = String(req.params.id);
         const deletedEvent: void | DocumentData = await deleteEventService(id);
