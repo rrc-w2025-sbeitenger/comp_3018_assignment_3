@@ -2,7 +2,7 @@ import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { db } from "../../../../config/firebaseConfig";
 //import { Event } from "../models/eventModel";
-import { QuerySnapshot } from "firebase-admin/firestore";
+import { DocumentData, QuerySnapshot } from "firebase-admin/firestore";
 import { EventResponse } from "../models/eventResponse";
 import { EventDTO } from "../models/eventDTO";
 import {
@@ -41,21 +41,10 @@ export const createEventService = async (event: eventCreateRequest): Promise<Eve
     const documentCount = eventSnapshot.docs.length + 1;
     const id: string = "evt_" + String(documentCount).padStart(5, "0");
 
-    /*
-    event = {
-        name: event.name,
-        date: event.date,
-        capacity: event.capacity,
-        registrationCount: event.registrationCount,
-        status: event.status,
-        category: event.category,
-    }
-    */
     return await addDocument(event, id);
 }
 
 //! check if it must be EventResponse or Event!!! 1:17
-
 export const getAllEventService = async (): Promise<EventResponse[]> => {
     return await getCollection();
 }
@@ -81,11 +70,11 @@ export const getEventByIdService = async (id:string): Promise<EventResponse | un
     }
 }
 
-export const updateEventByIdService = async(id:string, event: eventCreateRequest): Promise<void | undefined> => {
-    await updateDocument(id, event);
-    return;
+export const updateEventByIdService = async(id:string, event: eventCreateRequest): Promise<void | DocumentData> => {
+    return await updateDocument(id, event);
 }
 
-export const deleteEventService = async(id:string): Promise<void> => {
+export const deleteEventService = async(id:string): Promise<void | undefined> => {
     await deleteDocument(id);
+    return;
 }

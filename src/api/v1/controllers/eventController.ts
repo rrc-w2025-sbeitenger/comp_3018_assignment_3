@@ -12,6 +12,7 @@ import {
          updateEventByIdService,
           deleteEventService
     } from "../services/eventServices";
+import { DocumentData } from "node_modules/firebase-admin/lib/firestore";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
     const healthStatus: HealthCheckResponse = getHealthStatusService();
@@ -73,13 +74,13 @@ export const updateEvent = async (req: Request, res:Response) => {
             category: req.body.category,
         }
 
-        const updatedEvent = await updateEventByIdService(id, eventRequest);
-
+        const updatedEvent: void | DocumentData = await updateEventByIdService(id, eventRequest);
+        
         if(!updatedEvent){
             res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
         }
 
-        res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was updated`));
+        res.status(HTTP_STATUS.OK).json(successResponse(updatedEvent, `Entity ${id} was updated`));
         
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
@@ -89,9 +90,16 @@ export const updateEvent = async (req: Request, res:Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
     try{
         const id: string = String(req.params.id);
-        await deleteEventService(id);
+        const deletedEvent = await deleteEventService(id);
+
+        if(!deletedEvent){
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
+        }
+
         res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was deleted`));
     } catch (error){
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: `Validation error: Valid "Id" is required.`});
     }
+
+    
 }
