@@ -108,5 +108,28 @@ describe("getAllEventService", () => {
     });
 });
 
+describe("updateEventByIdService", () => {
+    it("should return updated event", async () => {
+        //arrange
+        const updatedEvnet = {
+            id: "evt_00001",
+            name: "Test Event",
+            date: "2026-12-01T00:00:00.000Z",
+            capacity: 200,
+            registrationCount: 0,
+            status: "active",
+            category: "workshop",
+            createdAt: "2026-12-01T00:00:00.000Z",
+            updatedAt: "2026-12-01T00:00:00.000Z",
+        };
+        mockUpdateDocument.mockResolvedValue(updatedEvnet);
+
+        //act
+        const result = await updateEventByIdService("evt_0001", mockCreateRequest);
+
+        //assert
+        expect(result).toEqual(updatedEvnet);
+    });
+});
 
 
