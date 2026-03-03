@@ -52,5 +52,14 @@ describe("getEventByIdService", () => {
         expect(result).toEqual(mockEntity);
         expect(mockGetDocumentById).toHaveBeenCalledWith("evt_00001");
     });
+
+    it("should return undefined when entity is not found", async () => {
+        mockGetDocumentById.mockResolvedValue(undefined);
+
+        const result = await getEventByIdService("evt_1117");
+ 
+        expect(result).toBeUndefined();
+        expect(mockGetDocumentById).toHaveBeenCalledWith("evt_1117");
+    });
 });
 
