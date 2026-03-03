@@ -1,0 +1,56 @@
+import { Event } from "../src/api/v1/models/eventModel";
+import {
+     getDocumentById,
+      addDocument,
+       getCollection,
+        updateDocument,
+         deleteDocument
+         } from "../src/api/v1/repositories/eventRepository";
+import {
+     getEventByIdService,
+      createEventService,
+       getAllEventService,
+        updateEventByIdService,
+         deleteEventService
+         } from "../src/api/v1/services/eventServices";
+
+jest.mock("../src/api/v1/repositories/eventRepository", () => ({
+    getDocumentById: jest.fn(),
+    addDocument: jest.fn(),
+    getCollection: jest.fn(),
+    updateDocument: jest.fn(),
+    deleteDocument: jest.fn(),
+}));
+
+const mockGetDocumentById = jest.mocked(getDocumentById);
+const mockAddDocument = jest.mocked(addDocument);
+const mockGetCollection = jest.mocked(getCollection);
+const mockUpdateDocument = jest.mocked(updateDocument);
+const mockDeleteDocument = jest.mocked(deleteDocument);
+
+const mockEntity: Event = {
+    id: "evt_00001",
+    name: "Test Event",
+    date: "2026-01-01T00:00:00.000Z",
+    capacity: 100,
+    registrationCount: 0,
+    status: "active",
+    category: "conference",
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+}
+
+describe("getEventByIdService", () => {
+    it("should return EventResponse when entity is found", async () => {
+        //arrange
+        mockGetDocumentById.mockResolvedValue(mockEntity);
+
+        //act
+        const result = await getEventByIdService("evt_00001");
+
+        //assert
+        expect(result).toEqual(mockEntity);
+        expect(mockGetDocumentById).toHaveBeenCalledWith("evt_00001");
+    });
+});
+
