@@ -37,7 +37,7 @@ export const eventSchemas = {
         }),
     },
 
-    //GET /events/:id - Get single post
+    //GET /events/:id - Get single event
     getById: {
         params: Joi.object({
             id: Joi.string().required().messages({
@@ -46,7 +46,7 @@ export const eventSchemas = {
         })
     },
 
-    // PUT /posts/:id - Update post
+    //PUT /events/:id - Update event
     update: {
         params: Joi.object({
             id: Joi.string().required().messages({
@@ -85,5 +85,15 @@ export const eventSchemas = {
                 "any.required": `Validation error: "Date" must be of ISO date.`
             })
         }),
-    },   
+    },
+    
+    //DELETE /events/:id - Delete event
+    delete: {
+        params: Joi.object({
+            id: Joi.string().required().messages({
+                "any.required": "Post ID is required",
+                "string.empty": "Post ID cannot be empty",
+            }),
+        }),
+    },
 };

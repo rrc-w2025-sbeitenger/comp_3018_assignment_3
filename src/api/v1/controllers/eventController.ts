@@ -90,16 +90,14 @@ export const updateEvent = async (req: Request, res:Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
     try{
         const id: string = String(req.params.id);
-        const deletedEvent = await deleteEventService(id);
+        const deletedEvent: void | DocumentData = await deleteEventService(id);
 
         if(!deletedEvent){
             res.status(HTTP_STATUS.NOT_FOUND).json({message: `Validation error: Valid "Id" is required.`});
         }
 
-        res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was deleted`));
+        res.status(HTTP_STATUS.OK).json(successResponse(deletedEvent, `Entity ${id} was deleted`));
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: `Validation error: Valid "Id" is required.`});
     }
-
-    
 }

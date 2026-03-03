@@ -74,7 +74,6 @@ export const updateEventByIdService = async(id:string, event: eventCreateRequest
     return await updateDocument(id, event);
 }
 
-export const deleteEventService = async(id:string): Promise<void | undefined> => {
-    await deleteDocument(id);
-    return;
+export const deleteEventService = async(id:string): Promise<void | DocumentData> => {
+    return await deleteDocument(id);
 }

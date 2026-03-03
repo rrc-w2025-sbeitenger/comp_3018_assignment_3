@@ -119,7 +119,7 @@ export const updateDocument = async (id:string, event:eventCreateRequest): Promi
     }
 };
 
-export const deleteDocument = async (id:string): Promise<void> => {
+export const deleteDocument = async (id:string): Promise<void | DocumentData> => {
     //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
@@ -129,6 +129,9 @@ export const deleteDocument = async (id:string): Promise<void> => {
     if(doc.exists){
         //Use the `delete()` method to remove the document from Firestore
         await docRef.delete();
+
+        //return the delete data.
+        return doc.data();
 
     } else {
         return;

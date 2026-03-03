@@ -1,4 +1,3 @@
-//interface for returning all documents.
 export interface EventDTO {
     id: string,
     name: string,
