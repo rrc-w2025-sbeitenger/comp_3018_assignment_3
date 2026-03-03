@@ -1,5 +1,5 @@
 import { db } from "../../../../config/firebaseConfig";
-import { DocumentReference, QuerySnapshot } from "firebase-admin/firestore";
+import { DocumentData, DocumentReference, QuerySnapshot } from "firebase-admin/firestore";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { Event } from "../models/eventModel";
 import { EventDTO } from "../models/eventDTO";
@@ -89,7 +89,7 @@ export const getDocumentById = async (id: string): Promise<EventDTO | undefined>
     }
 };
 
-export const updateDocument = async (id:string, event:eventCreateRequest): Promise<void | undefined> => {
+export const updateDocument = async (id:string, event:eventCreateRequest): Promise<void | DocumentData> => {
     //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
@@ -101,15 +101,21 @@ export const updateDocument = async (id:string, event:eventCreateRequest): Promi
     if(doc.exists){
         await docRef.update({
         name: event.name,
-        date: event.date,
+        date: new Date(event.date).toISOString(),
         capacity: event.capacity,
         registrationCount: event.registrationCount,
         status: event.status,
         category: event.category,
-        updatedAt: new Date()
+        updatedAt: new Date().toISOString()
     });
+
+    //get updated doc snapshot.
+    const updatedDoc = await docRef.get();
+    //use the `data()` method to view the actual document.
+    return updatedDoc.data();
+
     } else {
-        return undefined;
+        return;
     }
 };
 
@@ -117,6 +123,14 @@ export const deleteDocument = async (id:string): Promise<void> => {
     //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
-    //Use the `delete()` method to remove the document from Firestore
-    await docRef.delete();
+    //Use the `get()` method to retrieve the document
+    const doc = await docRef.get();
+
+    if(doc.exists){
+        //Use the `delete()` method to remove the document from Firestore
+        await docRef.delete();
+
+    } else {
+        return;
+    }
 };
