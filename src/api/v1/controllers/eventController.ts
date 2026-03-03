@@ -3,8 +3,8 @@ import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { successResponse } from "../models/responseModel";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { EventDTO } from "../models/eventDTO";
+import { HealthCheckResponse } from "../models/healthCheckResponse";
 import { 
-    HealthCheckResponse,
      getHealthStatusService,
       createEventService,
        getAllEventService,
