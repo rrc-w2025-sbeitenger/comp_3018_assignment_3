@@ -9,7 +9,8 @@ import {
      addDocument,
       getCollection,
        getDocumentById,
-        updateDocument
+        updateDocument,
+         deleteDocument
      } from "../repositories/eventRepository";
 
 export interface HealthCheckResponse {
@@ -83,4 +84,8 @@ export const getEventByIdService = async (id:string): Promise<EventResponse | un
 export const updateEventByIdService = async(id:string, event: eventCreateRequest): Promise<void | undefined> => {
     await updateDocument(id, event);
     return;
+}
+
+export const deleteEventService = async(id:string): Promise<void> => {
+    await deleteDocument(id);
 }
