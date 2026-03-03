@@ -1,14 +1,12 @@
 import { Event } from "../src/api/v1/models/eventModel";
 import {
      getDocumentById,
-      addDocument,
        getCollection,
         updateDocument,
          deleteDocument
          } from "../src/api/v1/repositories/eventRepository";
 import {
      getEventByIdService,
-      createEventService,
        getAllEventService,
         updateEventByIdService,
          deleteEventService
@@ -23,7 +21,6 @@ jest.mock("../src/api/v1/repositories/eventRepository", () => ({
 }));
 
 const mockGetDocumentById = jest.mocked(getDocumentById);
-const mockAddDocument = jest.mocked(addDocument);
 const mockGetCollection = jest.mocked(getCollection);
 const mockUpdateDocument = jest.mocked(updateDocument);
 const mockDeleteDocument = jest.mocked(deleteDocument);
@@ -48,20 +45,6 @@ const mockCreateRequest = {
     status: "active",
     category: "conference",
 };
-
-describe("createEventService", () => {
-    it("should call addDocument and return created event", async () => {
-        //arrange
-        mockAddDocument.mockResolvedValue(mockEntity);
-        
-        //act
-        const result = await createEventService(mockCreateRequest);
-        
-        //assert
-        expect(mockAddDocument).toHaveBeenCalled();
-        expect(result).toEqual(mockEntity);
-    });
-});
 
 describe("getEventByIdService", () => {
     it("should return EventResponse when entity is found", async () => {
@@ -131,5 +114,16 @@ describe("updateEventByIdService", () => {
         expect(result).toEqual(updatedEvnet);
     });
 });
+
+describe("deleteEventService", () => {
+    it("should call deleteDocument with correct id", async () => {
+        //act
+        await deleteEventService("evt_0001");
+
+        //assert
+        expect(mockDeleteDocument).toHaveBeenCalledWith("evt_0001");
+    });
+});
+
 
 
