@@ -40,6 +40,29 @@ const mockEntity: Event = {
     updatedAt: "2026-01-01T00:00:00.000Z",
 }
 
+const mockCreateRequest = {
+    name: "Test Event",
+    date: "2026-01-01T00:00:00.000Z",
+    capacity: 100,
+    registrationCount: 0,
+    status: "active",
+    category: "conference",
+};
+
+describe("createEventService", () => {
+    it("should call addDocument and return created event", async () => {
+        //arrange
+        mockAddDocument.mockResolvedValue(mockEntity);
+        
+        //act
+        const result = await createEventService(mockCreateRequest);
+        
+        //assert
+        expect(mockAddDocument).toHaveBeenCalled();
+        expect(result).toEqual(mockEntity);
+    });
+});
+
 describe("getEventByIdService", () => {
     it("should return EventResponse when entity is found", async () => {
         //arrange
@@ -54,10 +77,13 @@ describe("getEventByIdService", () => {
     });
 
     it("should return undefined when entity is not found", async () => {
+        //arrange
         mockGetDocumentById.mockResolvedValue(undefined);
 
+        //act
         const result = await getEventByIdService("evt_1117");
- 
+        
+        //assert
         expect(result).toBeUndefined();
         expect(mockGetDocumentById).toHaveBeenCalledWith("evt_1117");
     });
