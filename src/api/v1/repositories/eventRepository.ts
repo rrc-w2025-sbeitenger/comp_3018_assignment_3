@@ -90,14 +90,14 @@ export const getDocumentById = async (id: string): Promise<EventDTO | undefined>
 };
 
 export const updateDocument = async (id:string, event:eventCreateRequest): Promise<void | undefined> => {
-    // Create a reference to a specific document in the 'events' collection
+    //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
-    // Use the `get()` method to retrieve the document
+    //Use the `get()` method to retrieve the document
     const doc = await docRef.get();
     
-    // Use the `update()` method to modify specific fields in the document
-    // This will only change the specified fields, leaving others untouched
+    //Use the `update()` method to modify specific fields in the document
+    //This will only change the specified fields, leaving others untouched
     if(doc.exists){
         await docRef.update({
         name: event.name,
@@ -111,4 +111,12 @@ export const updateDocument = async (id:string, event:eventCreateRequest): Promi
     } else {
         return undefined;
     }
+};
+
+export const deleteDocument = async (id:string): Promise<void> => {
+    //Create a reference to a specific document in the 'events' collection
+    const docRef: DocumentReference = db.collection("events").doc(id);
+
+    //Use the `delete()` method to remove the document from Firestore
+    await docRef.delete();
 };
