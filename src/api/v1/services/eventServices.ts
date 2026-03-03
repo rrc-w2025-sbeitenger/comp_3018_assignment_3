@@ -1,10 +1,10 @@
 import { HTTP_STATUS } from "../../../constants/httpConstant";
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { db } from "../../../../config/firebaseConfig";
-//import { Event } from "../models/eventModel";
 import { DocumentData, QuerySnapshot } from "firebase-admin/firestore";
 import { EventResponse } from "../models/eventResponse";
 import { EventDTO } from "../models/eventDTO";
+import { HealthCheckResponse } from "../models/healthCheckResponse";
 import {
      addDocument,
       getCollection,
@@ -13,17 +13,10 @@ import {
          deleteDocument
      } from "../repositories/eventRepository";
 
-export interface HealthCheckResponse {
-    status: number;
-    uptime: number;
-    timestamp: string;
-    version: string;
-}
-
-/*
-*Creates and returns the health status.
-*@returns a healthCheckResponse object.
-*/
+/**
+ * retruns healthCheck server status.
+ * @returns {HealthCheckResponse} - returns a healthCheckResponse object.
+ */
 export const getHealthStatusService = (): HealthCheckResponse => {
     return {
         status: HTTP_STATUS.OK,
@@ -33,28 +26,43 @@ export const getHealthStatusService = (): HealthCheckResponse => {
     };
 }
 
+/**
+ * Creates a new event by calling addDocument repository and creaing an unique id for each event.
+ * @param {eventCreateRequest} event - the event.
+ * @returns {Promise<EventDTO>} - promise of EventDTO which is a new created event.
+ */
 //! change promise from Event to EventDTO.
 export const createEventService = async (event: eventCreateRequest): Promise<EventDTO> => {
     // `get()` returns a QuerySnapshot containing all documents in the collection.
     const eventSnapshot: QuerySnapshot = await db.collection("events").get();
     //docs gets an array of the collection.
-    const documentCount = eventSnapshot.docs.length + 1;
+    const documentCount: number = eventSnapshot.docs.length + 1;
     const id: string = "evt_" + String(documentCount).padStart(5, "0");
 
     return await addDocument(event, id);
 }
 
-//! check if it must be EventResponse or Event!!! 1:17
+/**
+ * get all events by calling the getCollection repository.
+ * @returns {Promise<EventResponse[]>} - promise of EventResponse[] which is an array of the events.
+ */
+//! check if it must be EventResponse or Event 1:17
 export const getAllEventService = async (): Promise<EventResponse[]> => {
     return await getCollection();
 }
 
+/**
+ * return event by id.
+ * @param {string} id - the event id.
+ * @returns {Promise<EventResponse>} - promise of EventResponse which is the event, or undfined if not able to find document in collectin from the repository.
+ */
 export const getEventByIdService = async (id:string): Promise<EventResponse | undefined> => {
-    const entity = await getDocumentById(id);
+    const entity: EventResponse | undefined = await getDocumentById(id);
 
     //if getDocumentById in repository fails validaiton then return undefined.
     if(!entity){
-        return undefined;
+        //return undefined;
+        return;
     }
 
     return {
