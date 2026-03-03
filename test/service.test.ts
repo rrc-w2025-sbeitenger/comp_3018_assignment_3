@@ -89,3 +89,24 @@ describe("getEventByIdService", () => {
     });
 });
 
+describe("getAllEventService", () => {
+    it("should return all events", async () => {
+        //arrange
+        const mockEvents = [
+            mockEntity,
+            mockEntity,
+            mockEntity
+        ]
+
+        mockGetCollection.mockResolvedValue(mockEvents);
+
+        //act
+        const result = await getAllEventService();
+
+        //assert
+        expect(result).toEqual(mockEvents);
+    });
+});
+
+
+
