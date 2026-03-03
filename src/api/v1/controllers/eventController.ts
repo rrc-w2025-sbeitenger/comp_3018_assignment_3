@@ -9,7 +9,8 @@ import {
       createEventService,
        getAllEventService,
         getEventByIdService,
-         updateEventByIdService
+         updateEventByIdService,
+          deleteEventService
     } from "../services/eventServices";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
@@ -80,6 +81,16 @@ export const updateEvent = async (req: Request, res:Response) => {
 
         res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was updated`));
         
+    } catch (error){
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
+    }
+}
+
+export const deleteEvent = async (req: Request, res: Response) => {
+    try{
+        const id: string = String(req.params.id);
+        await deleteEventService(id);
+        res.status(HTTP_STATUS.OK).json(successResponse(`Entity ${id} was deleted`));
     } catch (error){
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
     }
