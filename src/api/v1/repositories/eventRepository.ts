@@ -3,15 +3,20 @@ import { DocumentData, DocumentReference, QuerySnapshot } from "firebase-admin/f
 import { eventCreateRequest } from "../models/eventCreateRequestModel";
 import { Event } from "../models/eventModel";
 import { EventDTO } from "../models/eventDTO";
-//import { EventResponse } from "../models/eventResponse";
 
-export const addDocument = async (event: eventCreateRequest, id: string): Promise<EventDTO> => {
-    // Create a reference to a document in the 'users' collection with ID
-    // If the document doesn't exist, it will be created
-    const docRef: DocumentReference = db.collection("events").doc();
+/**
+ * Adds a new document/entity in the events collection.
+ * @param {eventCreateRequest} event - the created event.
+ * @param {string} id - the id of the document.
+ * @returns {Promise<Event>} - promise of Event which is the created event.
+ */
+export const addDocument = async (event: eventCreateRequest, id: string): Promise<Event> => {
+    //Create a reference to a document in the 'users' collection with ID
+    //If the document doesn't exist, it will be created
+    const docRef: DocumentReference = db.collection("events").doc(id);
 
-    // Use the `set` method to add or overwrite data in the document
-    // The data is passed as an object with fields and their values
+    //Use the `set` method to add or overwrite data in the document
+    //The data is passed as an object with fields and their values
     const eventEntity: Event = {
         id: id,
         name: event.name,
@@ -31,6 +36,10 @@ export const addDocument = async (event: eventCreateRequest, id: string): Promis
     //return docRef.id;
 };
 
+/**
+ * return all the documents in a collection.
+ * @returns {Promise<EventDTO[]>} - promise of EventDTO array which is all the events.
+ */
 export const getCollection = async (): Promise<EventDTO[]> => {
     // Retrieve all documents from the 'events' collection
     // `get()` returns a QuerySnapshot containing all documents in the collection
@@ -60,15 +69,20 @@ export const getCollection = async (): Promise<EventDTO[]> => {
     return events;
 };
 
+/**
+ * return a single a document by id.
+ * @param {string} id - id of the documnet.
+ * @returns {Promise<EventDTO | undefined>} - promise of EventDTO if document exits, and undefined if they don't.
+ */
 //! changed Event to EventDTO
 export const getDocumentById = async (id: string): Promise<EventDTO | undefined> => {
-    // Create a reference to a specific document in the 'events' collection
+    //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
 
-    // Use the `get()` method to retrieve the document
+    //Use the `get()` method to retrieve the document
     const doc = await docRef.get();
 
-    // Check if the document exists
+    //Check if the document exists
     if (doc.exists) {
         // `doc.data()` returns an object with all fields in the document
         let data = doc.data();
@@ -89,6 +103,12 @@ export const getDocumentById = async (id: string): Promise<EventDTO | undefined>
     }
 };
 
+/**
+ * update the document by id in the collection.
+ * @param {string} id - id of the document.
+ * @param {eventCreateRequest} event - the created event.
+ * @returns {Promise<void | DocumentData>} - promise of void when document doesn't exist or DoucmentData when document exists.
+ */
 export const updateDocument = async (id:string, event:eventCreateRequest): Promise<void | DocumentData> => {
     //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
@@ -119,6 +139,11 @@ export const updateDocument = async (id:string, event:eventCreateRequest): Promi
     }
 };
 
+/**
+ * delete the document by id in the collection.
+ * @param {string} id - id of the document.
+ * @returns {Promise<void | DocumentData>} - promise of void when document doesn't exist or DoucmentData when document exists.
+ */
 export const deleteDocument = async (id:string): Promise<void | DocumentData> => {
     //Create a reference to a specific document in the 'events' collection
     const docRef: DocumentReference = db.collection("events").doc(id);
