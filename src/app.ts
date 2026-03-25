@@ -1,8 +1,13 @@
 import express, {Express} from "express";
+import dotenv from "dotenv";
+
+// Load environment variables BEFORE your internal imports!
+dotenv.config();
+
 import eventRoutes from "./api/v1/routes/eventRoutes";
 import morgan from "morgan";
-import helmet, { xXssProtection } from "helmet";
-import { boolean } from "node_modules/joi/lib";
+import helmet from "helmet";
+import cors from "cors";
 
 //Initialize Express application.
 const app: Express = express();
@@ -38,6 +43,29 @@ const apiHelmetConfig = helmet({
 });
 
 app.use(apiHelmetConfig);
+
+// config/corsConfig.ts
+const getCorsOptions = () => {
+    const isDevelopment = process.env.NODE_ENV === "development";
+
+    if (isDevelopment) {
+        // Allow all origins in development for easy testing
+        return {
+            origin: true,
+            credentials: true,
+        };
+    }
+
+    // Strict origins in production
+    return {
+        origin: process.env.ALLOWED_ORIGINS?.split(",") || [],
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    };
+};
+
+app.use(cors(getCorsOptions()));
 
 //global middleware.
 app.use(express.json());
