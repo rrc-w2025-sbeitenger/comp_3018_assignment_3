@@ -25,11 +25,11 @@ const apiHelmetConfig = helmet({
         preload: true,
     },
 
-    //sets "X-Permitted-Cross-Domain-Policies: by-content-type".
+    //sets "X-Permitted-Cross-Domain-Policies: none".
     //tells client the domain policy for loading cross-domian content.
     //protects from strange adobe requests.
     xPermittedCrossDomainPolicies: {
-        permittedPolicies: "by-content-type",
+        permittedPolicies: "none",
     },
 
     // Remove server information from responses
@@ -39,7 +39,7 @@ const apiHelmetConfig = helmet({
     noSniff: true,
 
     // Prevent clickjacking
-    frameguard: { action: "deny" },
+    xFrameOptions: {action: "deny"},
 });
 
 app.use(apiHelmetConfig);
