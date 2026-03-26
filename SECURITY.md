@@ -35,7 +35,7 @@ const apiHelmetConfig = helmet({
 3. **hsts** - Enabled with 1-year max-age to enforce HTTPS connection. Enabled to include subdomains, but this doesn't affect this project since this API is running on local host.
 Enabled preload to ensure secure connection, the site uses HSTS preloading for HTTPS connections.
 
-4. **xPermittedCrossDomainPolicies:{permittedPolicies: "None"}** - Mainly used for legeacy browers clients of this domains policy for loading cross-domain content. It's disabled so no policy
+4. **xPermittedCrossDomainPolicies:{permittedPolicies: "None"}** - Mainly used for legeacy browers, clients of this domains policy for loading cross-domain content. It's disabled so no policy
 files are allowed.
 
 5. **hidePoweredBy: true** - Enabled, it removes server information from response headers.
@@ -48,6 +48,7 @@ files are allowed.
 
 1. Helmet.js Official Documentation - https://helmetjs.github.io/
 2. OWASP Secure Headers Project - https://owasp.org/www-project-secure-headers/
+3. https://stackoverflow.com/questions/60706823/what-modules-of-helmet-should-i-use-in-my-rest-api
 
 
 ## Cors Configuration
@@ -76,4 +77,21 @@ const getCorsOptions = () => {
 
 ### Justification
 
-1. ****
+1. **origin: true:** - If in development allow all origins to make request and return it back. Easy for testing.
+
+2. **credentials: true** - If in development allow the origin to use credentitals. Easy for testing.
+
+3. **origin: process.env.ALLOWED_ORIGINS?.split(",") || []** - If in production only allow strict origins that have been listing in the .env. Only want origins that we allow.
+
+4. **credentials: true** - If in production allow origin to use credentitals.
+
+5. **methods: ["GET", "POST", "PUT", "DELETE"]** - Which HTTP methods are allowed. Only want certain methods allowed.
+
+6. **allowedHeaders: ["Content-Type", "Authorization"]** - allowedHeaders: is which request headers are allowed. Content-Type: type of data is being sent. Authorization: auth information.
+allowedHeaders is included since we are constantly sending JSON and auth tokens.
+
+###sources
+
+1. https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
+2. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Origin
+3. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Headers
