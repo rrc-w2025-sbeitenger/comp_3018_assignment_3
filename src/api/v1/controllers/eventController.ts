@@ -16,8 +16,12 @@ import { DocumentData } from "node_modules/firebase-admin/lib/firestore";
 import { EventResponse } from "../models/eventResponse";
 
 export const getHealthCheck = (req: Request, res: Response): void => {
-    const healthStatus: HealthCheckResponse = getHealthStatusService();
-    res.status(HTTP_STATUS.OK).json(successResponse(healthStatus));
+    try{
+        const healthStatus: HealthCheckResponse = getHealthStatusService();
+        res.status(HTTP_STATUS.OK).json(successResponse(healthStatus));
+    } catch (error){
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Internal Server Error"});
+    }
 }
 
 export const createEvent = async (req: Request, res:Response): Promise<void> => {
