@@ -235,6 +235,93 @@ router.get("/events/:id", validateRequest(eventSchemas.getById), getEventById);
  *                   example: Internal server error
  */
 router.post("/events", validateRequest(eventSchemas.create), createEvent);
+
+/**
+ * @openapi
+ * /events/{id}:
+ *   put:
+ *     summary: Update an event by id
+ *     tags: [Events]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: evt_00001
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Tech Conference
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: '2026-05-20T09:00:00.000Z'
+ *               capacity:
+ *                 type: integer
+ *                 example: 150
+ *               registrationCount:
+ *                 type: integer
+ *                 example: 50
+ *               status:
+ *                 type: string
+ *                 example: active
+ *               category:
+ *                 type: string
+ *                 example: workshop
+ *     responses:
+ *       '200':
+ *         description: Event updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   example:
+ *                     id: 'evt_00007'
+ *                     date: '2026-01-10T00:00:00.000Z'
+ *                     capacity: 200
+ *                     registrationCount: 150
+ *                     status: 'active'
+ *                     category: 'conference'
+ *                     name: 'conference meeting'
+ *                     createdAt: '2025-01-10T00:00:00.000Z'
+ *                     updatedAt: '2025-09-10T00:00:00.000Z'
+ *                 message:
+ *                   type: string
+ *                   example: Entity evt_00005 was updated
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Validation error Valid Id is required.
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 router.put("/events/:id", validateRequest(eventSchemas.update), updateEvent);
 router.delete("/events/:id", validateRequest(eventSchemas.delete), deleteEvent);
 export default router;
