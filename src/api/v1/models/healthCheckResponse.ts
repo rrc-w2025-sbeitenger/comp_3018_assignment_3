@@ -5,6 +5,11 @@
  *   schemas:
  *     HealthCheckResponse:
  *       type: object
+ *       required:
+ *         - status
+ *         - uptime
+ *         - timestamp
+ *         - version
  *       properties:
  *         status:
  *           type: integer
