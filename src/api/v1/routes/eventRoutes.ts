@@ -146,7 +146,7 @@ router.get("/events", validateRequest(eventSchemas.create), getAllEvents);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Validation error Valid Id is required.
+ *                   example: 'Validation error Valid "Id" is required.'
  *       '500':
  *         description: Internal server error
  *         content:
@@ -223,6 +223,20 @@ router.get("/events/:id", validateRequest(eventSchemas.getById), getEventById);
  *                 category: 'conference'
  *                 createdAt: '2025-01-10T00:00:00.000Z'
  *                 updatedAt: '2025-09-10T00:00:00.000Z'
+ *       '400':
+ *         description: >
+ *           Validation failed. Possible reasons:
+ *           "name" is required and must be at least 3 characters,
+ *           "capacity" is required and must be at least 5,
+ *           "date" is required and must be a future ISO date.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: 'Validation error: "name" is required.'
  *       '500':
  *         description: Internal server error
  *         content:
@@ -310,7 +324,7 @@ router.post("/events", validateRequest(eventSchemas.create), createEvent);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Validation error Valid Id is required.
+ *                   example: 'Validation error Valid "Id" is required.'
  *       '500':
  *         description: Internal server error
  *         content:
@@ -372,7 +386,7 @@ router.put("/events/:id", validateRequest(eventSchemas.update), updateEvent);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Validation error Valid Id is required.
+ *                   example: 'Validation error Valid "Id" is required.'
  *       '500':
  *         description: Internal server error
  *         content:
