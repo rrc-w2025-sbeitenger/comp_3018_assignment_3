@@ -248,7 +248,7 @@ router.post("/events", validateRequest(eventSchemas.create), createEvent);
  *         required: true
  *         schema:
  *           type: string
- *         example: evt_00001
+ *         example: evt_00006
  *     requestBody:
  *       required: true
  *       content:
@@ -289,7 +289,7 @@ router.post("/events", validateRequest(eventSchemas.create), createEvent);
  *                 data:
  *                   type: object
  *                   example:
- *                     id: 'evt_00007'
+ *                     id: 'evt_00006'
  *                     date: '2026-01-10T00:00:00.000Z'
  *                     capacity: 200
  *                     registrationCount: 150
@@ -300,7 +300,7 @@ router.post("/events", validateRequest(eventSchemas.create), createEvent);
  *                     updatedAt: '2025-09-10T00:00:00.000Z'
  *                 message:
  *                   type: string
- *                   example: Entity evt_00005 was updated
+ *                   example: Entity evt_00006 was updated
  *       '404':
  *         description: Event not found
  *         content:
@@ -323,5 +323,66 @@ router.post("/events", validateRequest(eventSchemas.create), createEvent);
  *                   example: Internal server error
  */
 router.put("/events/:id", validateRequest(eventSchemas.update), updateEvent);
+
+/**
+ * @openapi
+ * /events/{id}:
+ *   delete:
+ *     summary: Delete an event by id
+ *     tags: [Events]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: evt_00006
+ *     responses:
+ *       '200':
+ *         description: Event deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   example:
+ *                     id: 'evt_00006'
+ *                     date: '2026-01-10T00:00:00.000Z'
+ *                     capacity: 200
+ *                     registrationCount: 150
+ *                     status: 'active'
+ *                     category: 'conference'
+ *                     name: 'conference meeting'
+ *                     createdAt: '2025-01-10T00:00:00.000Z'
+ *                     updatedAt: '2025-09-10T00:00:00.000Z'
+ *                 message:
+ *                   type: string
+ *                   example: Entity evt_00006 was deleted
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Validation error Valid Id is required.
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 router.delete("/events/:id", validateRequest(eventSchemas.delete), deleteEvent);
 export default router;
