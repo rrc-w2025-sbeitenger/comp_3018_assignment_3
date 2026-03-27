@@ -69,7 +69,9 @@ router.get("/health", getHealthCheck);
  *                   type: string
  *                   example: success
  *                 data:
- *                   $ref: '#/components/schemas/EventDTO'
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/EventDTO'
  *             example:
  *               status: success
  *               data:
@@ -94,6 +96,68 @@ router.get("/health", getHealthCheck);
  *                   example: Internal server error
  */
 router.get("/events", validateRequest(eventSchemas.create), getAllEvents);
+
+/**
+ * @openapi
+ * /events/{id}:
+ *   get:
+ *     summary: Get an event by id
+ *     tags: [Events]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: evt_00006
+ *     responses:
+ *       '200':
+ *         description: Event found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   items:
+ *                     $ref: '#/components/schemas/EventResponse'
+ *             example:
+ *               status: success
+ *               data:
+ *                 id: evt_00006
+ *                 name: 'conference meeting'
+ *                 date: '2026-01-10T00:00:00.000Z'
+ *                 capacity: 200
+ *                 registrationCount: 150
+ *                 status: 'active'
+ *                 category: 'conference'
+ *                 createdAt: '2025-01-10T00:00:00.000Z'
+ *                 updatedAt: '2025-09-10T00:00:00.000Z'
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Validation error Valid Id is required.
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 router.get("/events/:id", validateRequest(eventSchemas.getById), getEventById);
 router.post("/events", validateRequest(eventSchemas.create), createEvent);
 router.put("/events/:id", validateRequest(eventSchemas.update), updateEvent);
