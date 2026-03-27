@@ -159,6 +159,81 @@ router.get("/events", validateRequest(eventSchemas.create), getAllEvents);
  *                   example: Internal server error
  */
 router.get("/events/:id", validateRequest(eventSchemas.getById), getEventById);
+
+/**
+ * @openapi
+ * /events:
+ *   post:
+ *     summary: Create a new event
+ *     tags: [Events]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - date
+ *               - capacity
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Tech Conference 2026
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: '2026-04-15T10:00:00.000Z'
+ *               capacity:
+ *                 type: integer
+ *                 example: 100
+ *               registrationCount:
+ *                 type: integer
+ *                 example: 25
+ *               status:
+ *                 type: string
+ *                 example: active
+ *               category:
+ *                 type: string
+ *                 example: conference
+ *     responses:
+ *       '201':
+ *         description: Event created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   items:
+ *                     $ref: '#/components/schemas/EventDTO'
+ *             example:
+ *               status: success
+ *               data:
+ *                 id: 'evt_00007'
+ *                 name: 'conference meeting'
+ *                 date: '2026-01-10T00:00:00.000Z'
+ *                 capacity: 200
+ *                 registrationCount: 150
+ *                 status: 'active'
+ *                 category: 'conference'
+ *                 createdAt: '2025-01-10T00:00:00.000Z'
+ *                 updatedAt: '2025-09-10T00:00:00.000Z'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 router.post("/events", validateRequest(eventSchemas.create), createEvent);
 router.put("/events/:id", validateRequest(eventSchemas.update), updateEvent);
 router.delete("/events/:id", validateRequest(eventSchemas.delete), deleteEvent);
