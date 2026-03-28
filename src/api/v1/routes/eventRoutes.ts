@@ -20,7 +20,7 @@ const router:Router = express.Router();
  *     tags: [Health]
  *     responses:
  *       '200':
- *         description: Server is running and accepting requests
+ *         description: Server is running
  *         content:
  *           application/json:
  *             schema:
@@ -59,7 +59,7 @@ router.get("/health", getHealthCheck);
  *     tags: [Events]
  *     responses:
  *       '200':
- *         description: A list of events
+ *         description: A list of all events
  *         content:
  *           application/json:
  *             schema:
