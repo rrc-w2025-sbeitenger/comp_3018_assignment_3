@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 // Load environment variables BEFORE your internal imports!
 dotenv.config();
 
+import setupSwagger from "../config/swagger";
 import eventRoutes from "./api/v1/routes/eventRoutes";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -42,6 +43,7 @@ const apiHelmetConfig = helmet({
     xFrameOptions: {action: "deny"},
 });
 
+//helmet.js
 app.use(apiHelmetConfig);
 
 // config/corsConfig.ts
@@ -53,6 +55,7 @@ const getCorsOptions = () => {
         return {
             origin: true,
             credentials: true,
+            optionsSuccessStatus: 204,
         };
     }
 
@@ -62,9 +65,12 @@ const getCorsOptions = () => {
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
+        optionsSuccessStatus: 204,
+        maxAge: 1200,
     };
 };
 
+//cors
 app.use(cors(getCorsOptions()));
 
 //global middleware.
@@ -73,5 +79,8 @@ app.use((morgan("combined")));
 
 //router handler for tickets.
 app.use("/api/v1", eventRoutes);
+
+// Setup Swagger
+setupSwagger(app);
 
 export default app;
