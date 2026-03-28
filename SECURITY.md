@@ -47,7 +47,7 @@ files are allowed.
 ### Sources
 
 1. Helmet.js Official Documentation - https://helmetjs.github.io/
-2. OWASP Secure Headers Project - https://owasp.org/www-project-secure-headers/
+2. https://blog.logrocket.com/using-helmet-node-js-secure-application/#why-need-helmet-node-js-app
 3. https://stackoverflow.com/questions/60706823/what-modules-of-helmet-should-i-use-in-my-rest-api
 
 
@@ -63,6 +63,7 @@ const getCorsOptions = () => {
         return {
             origin: true,
             credentials: true,
+            optionsSuccessStatus: 204,
         };
     }
 
@@ -71,6 +72,8 @@ const getCorsOptions = () => {
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
+        optionsSuccessStatus: 204,
+        maxAge: 1200,
     };
 };
  \`\`\`
@@ -81,17 +84,25 @@ const getCorsOptions = () => {
 
 2. **credentials: true** - If in development allow the origin to use credentitals. Easy for testing.
 
-3. **origin: process.env.ALLOWED_ORIGINS?.split(",") || []** - If in production only allow strict origins that have been listing in the .env. Only want origins that we allow.
+3. **optionsSuccessStatus: 204** - Send back a success status code
 
-4. **credentials: true** - If in production allow origin to use credentitals.
+4. **origin: process.env.ALLOWED_ORIGINS?.split(",") || []** - If in production only allow strict origins that have been listing in the .env. Only want origins that we allow.
 
-5. **methods: ["GET", "POST", "PUT", "DELETE"]** - Which HTTP methods are allowed. Only want certain methods allowed.
+5. **credentials: true** - If in production allow origin to use credentitals.
 
-6. **allowedHeaders: ["Content-Type", "Authorization"]** - allowedHeaders: is which request headers are allowed. Content-Type: type of data is being sent. Authorization: auth information.
+6. **methods: ["GET", "POST", "PUT", "DELETE"]** - Which HTTP methods are allowed. Only want certain methods allowed.
+
+7. **allowedHeaders: ["Content-Type", "Authorization"]** - allowedHeaders: is which request headers are allowed. Content-Type: type of data is being sent. Authorization: auth information.
 allowedHeaders is included since we are constantly sending JSON and auth tokens.
+
+8. **optionsSuccessStatus: 204** - Send back a success status code
+
+9. **maxAge: 1200** - maxAge is how long information can be contained in the Access-Control-Allow-Mehtods can be cached. Good for setting a time for when the cors is checked again (also tokens). 
 
 ###sources
 
 1. https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
 2. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Origin
 3. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Headers
+4. https://www.npmjs.com/package/cors#configuration-options
+5. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Max-Age
