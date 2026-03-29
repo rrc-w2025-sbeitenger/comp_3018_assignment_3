@@ -1,0 +1,780 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Event Management API Documentation",
+    "version": "1.0.0",
+    "description": "This is the API documentation for the Event Management application."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "EventCreateRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "date",
+          "capacity"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Name of the event",
+            "example": "Tech Conference 2026"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Must be a future date in ISO format",
+            "example": "2026-12-01T09:00:00.000Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "minimum": 5,
+            "description": "Maximum number of attendees",
+            "example": 100
+          },
+          "registrationCount": {
+            "type": "integer",
+            "description": "Current number of registrations, must not exceed capacity",
+            "example": 50
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "description": "Current status of the event",
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "description": "Category of the event",
+            "example": "conference"
+          }
+        }
+      },
+      "EventDTO": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "date",
+          "capacity",
+          "registrationCount",
+          "status",
+          "category",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "evt_00001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Tech Conference 2026"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-26T00:00:00.000Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "example": 100
+          },
+          "registrationCount": {
+            "type": "integer",
+            "example": 25
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "example": "conference"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-00T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-26T00:00:00.000Z"
+          }
+        }
+      },
+      "EventResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "date",
+          "capacity",
+          "registrationCount",
+          "status",
+          "category",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "evt_00001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Tech Conference 2026"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-26T00:00:00.000Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "example": 100
+          },
+          "registrationCount": {
+            "type": "integer",
+            "example": 25
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "example": "conference"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-00T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-26T00:00:00.000Z"
+          }
+        }
+      },
+      "HealthCheckResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "uptime",
+          "timestamp",
+          "version"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "uptime": {
+            "type": "number",
+            "example": 20.5620736
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-03-26T22:33:50.348Z"
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Returns the health status of the server",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Server is running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/HealthCheckResponse"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "status": 200,
+                    "uptime": 3724.58,
+                    "timestamp": "2026-01-10T00:00:00.000Z",
+                    "version": "1.0.0"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "Get all events",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EventDTO"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "id": 3,
+                    "name": "conference meeting",
+                    "date": "2026-01-10T00:00:00.000Z",
+                    "capacity": 200,
+                    "registrationCount": 150,
+                    "status": "active",
+                    "category": "conference",
+                    "createdAt": "2025-01-10T00:00:00.000Z",
+                    "updatedAt": "2025-09-10T00:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new event",
+        "tags": [
+          "Events"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "date",
+                  "capacity"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Tech Conference 2026"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-04-15T10:00:00.000Z"
+                  },
+                  "capacity": {
+                    "type": "integer",
+                    "example": 100
+                  },
+                  "registrationCount": {
+                    "type": "integer",
+                    "example": 25
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "active"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "conference"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "items": {
+                        "$ref": "#/components/schemas/EventDTO"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "id": "evt_00007",
+                    "name": "conference meeting",
+                    "date": "2026-01-10T00:00:00.000Z",
+                    "capacity": 200,
+                    "registrationCount": 150,
+                    "status": "active",
+                    "category": "conference",
+                    "createdAt": "2025-01-10T00:00:00.000Z",
+                    "updatedAt": "2025-09-10T00:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed. Possible reasons: \"name\" is required and must be at least 3 characters, \"capacity\" is required and must be at least 5, \"date\" is required and must be a future ISO date.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation error: \"name\" is required."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "summary": "Get an event by id",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "evt_00006"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "items": {
+                        "$ref": "#/components/schemas/EventResponse"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "id": "evt_00006",
+                    "name": "conference meeting",
+                    "date": "2026-01-10T00:00:00.000Z",
+                    "capacity": 200,
+                    "registrationCount": 150,
+                    "status": "active",
+                    "category": "conference",
+                    "createdAt": "2025-01-10T00:00:00.000Z",
+                    "updatedAt": "2025-09-10T00:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error Valid \"Id\" is required."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an event by id",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "evt_00006"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Updated Tech Conference"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-05-20T09:00:00.000Z"
+                  },
+                  "capacity": {
+                    "type": "integer",
+                    "example": 150
+                  },
+                  "registrationCount": {
+                    "type": "integer",
+                    "example": 50
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "active"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "workshop"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "id": "evt_00006",
+                        "date": "2026-01-10T00:00:00.000Z",
+                        "capacity": 200,
+                        "registrationCount": 150,
+                        "status": "active",
+                        "category": "conference",
+                        "name": "conference meeting",
+                        "createdAt": "2025-01-10T00:00:00.000Z",
+                        "updatedAt": "2025-09-10T00:00:00.000Z"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Entity evt_00006 was updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error Valid \"Id\" is required."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an event by id",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "evt_00006"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "id": "evt_00006",
+                        "date": "2026-01-10T00:00:00.000Z",
+                        "capacity": 200,
+                        "registrationCount": 150,
+                        "status": "active",
+                        "category": "conference",
+                        "name": "conference meeting",
+                        "createdAt": "2025-01-10T00:00:00.000Z",
+                        "updatedAt": "2025-09-10T00:00:00.000Z"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Entity evt_00006 was deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error Valid \"Id\" is required."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
