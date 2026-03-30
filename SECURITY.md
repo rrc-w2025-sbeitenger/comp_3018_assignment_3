@@ -26,8 +26,7 @@ const apiHelmetConfig = helmet({
 
 ### Justification
 
-1. **contentSecurityPolicy: false** - Disabled because this API returns only
-   JSON data and does not serve HTML content. CSP is designed to prevent XSS in
+1. **contentSecurityPolicy: false** - Disabled because this API returns only JSON data and does not serve HTML content. CSP is designed to prevent XSS in
    browsers rendering HTML.
 
 2. **crossOriginEmbedderPolicy: false** - Header helps control what resources can be loaded cross-origin, but is disabled becasuse this API does not support a frontend page currently.

@@ -20,9 +20,10 @@ const apiHelmetConfig = helmet({
     crossOriginEmbedderPolicy: false,
 
     // Keep essential security headers
+    //strict transport security
     hsts: {
         maxAge: 31536000, // 1 year
-        includeSubDomains: true,
+        includeSubDomains: false,
         preload: true,
     },
 
@@ -53,7 +54,7 @@ const getCorsOptions = () => {
     if (isDevelopment) {
         // Allow all origins in development for easy testing
         return {
-            origin: true,
+            origin: "http://localhost:3000",
             credentials: true,
             optionsSuccessStatus: 204,
         };
